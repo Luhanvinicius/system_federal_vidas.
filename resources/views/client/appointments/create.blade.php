@@ -116,7 +116,9 @@
 </div>
 
 <script>
-const NEARBY_URL = "{{ url('/api/clinics/nearby') }}";
+// const NEARBY_URL = "{{ url('/api/clinics/nearby') }}";
+const NEARBY_URL = "/api/clinics/nearby";
+
 
 const cepInput   = document.getElementById('cep');
 const cityInput  = document.getElementById('city');

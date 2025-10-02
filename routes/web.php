@@ -16,27 +16,56 @@ Route::get('/dashboard', function () {
     return redirect()->route('client.dashboard');
 })->middleware(['auth','verified'])->name('dashboard');
 
-// CLIENTE
+
+// =============================
+// ROTAS CLIENTE
+// =============================
 Route::middleware(['auth','verified'])->group(function () {
+    // Dashboard do cliente
     Route::get('/client/dashboard', fn() => view('client.dashboard'))->name('client.dashboard');
-    Route::get('/appointments', [ClientAppointmentController::class,'index'])->name('appointments.index'); // <- NOVO
+
+    // ✅ Tela "Minhas Consultas" — precisa do método index() no AppointmentController
+    Route::get('/appointments', [ClientAppointmentController::class,'index'])->name('appointments.index');
+
+    // Nova consulta
     Route::get('/appointments/create', [ClientAppointmentController::class,'create'])->name('appointments.create');
+
+    // Salvar agendamento
     Route::post('/appointments', [ClientAppointmentController::class,'store'])->name('appointments.store');
+
+    // Tela de pagamento PIX
     Route::get('/appointments/{appointment}/payment', [ClientPaymentController::class,'payment'])->name('appointments.payment');
+
+    // ✅ (Opcional, mas recomendado) Detalhes da consulta
+    Route::get('/appointments/{appointment}', [ClientAppointmentController::class,'show'])->name('appointments.show');
 });
 
-// ADMIN em /admin
+
+// =============================
+// ROTAS ADMINISTRADOR
+// =============================
 Route::middleware(['auth','verified'])->prefix('admin')->as('admin.')->group(function () {
     Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+
     Route::get('/clients/create', [ClientController::class, 'create'])->name('clients.create');
     Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+
     Route::resource('appointments', AdminAppointmentController::class);
 });
 
+
+// =============================
+// PERFIL DO USUÁRIO
+// =============================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// =============================
+// OUTRAS ROTAS
+// =============================
 require __DIR__.'/auth.php';
+require __DIR__.'/web_payment_status.php';
+require __DIR__.'/web_success_page.php';

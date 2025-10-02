@@ -61,4 +61,14 @@ class AsaasService
             'payload'     => $qr->json('payload'),
         ];
     }
+
+
+    public function getPayment(string $paymentId): array
+    {
+        $r = $this->http()->get("{$this->baseUrl}/payments/{$paymentId}");
+        if (!$r->successful()) {
+            throw new \RuntimeException('Erro ao consultar pagamento: ' . $r->status() . ' ' . $r->body());
+        }
+        return $r->json();
+    }
 }

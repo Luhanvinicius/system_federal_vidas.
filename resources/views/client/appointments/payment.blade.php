@@ -28,4 +28,7 @@
     @endif
   </div>
 </div>
+
+@include('client.appointments._polling_success_snippet')
+
 @endsection
