@@ -1,24 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-xl font-bold mb-4">Minhas Consultas</h1>
+<div class="max-w-5xl mx-auto py-10">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-semibold">Meus agendamentos</h1>
+    <a href="{{ route('appointments.create') }}" class="px-4 py-2 rounded bg-blue-600 text-white">Nova solicitação</a>
+  </div>
 
-<table class="min-w-full bg-white shadow rounded">
-    <thead>
-        <tr class="bg-gray-200 text-left">
-            <th class="py-2 px-4">Especialidade</th>
-            <th class="py-2 px-4">Clínica</th>
-            <th class="py-2 px-4">Data/Hora</th>
-            <th class="py-2 px-4">Status</th>
-        </tr>
-    </thead>
-    <tbody>
+  <div class="bg-white shadow rounded overflow-hidden">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-50">
         <tr>
-            <td class="py-2 px-4">Clínico Geral</td>
-            <td class="py-2 px-4">Clínica Saúde Vida</td>
-            <td class="py-2 px-4">28/09/2025 14:30</td>
-            <td class="py-2 px-4"><span class="px-2 py-1 bg-green-200 text-green-800 rounded">Agendado</span></td>
+          <th class="px-4 py-2 text-left">#</th>
+          <th class="px-4 py-2 text-left">Especialidade</th>
+          <th class="px-4 py-2 text-left">Cidade/UF</th>
+          <th class="px-4 py-2 text-left">Status</th>
+          <th class="px-4 py-2 text-left">Ações</th>
         </tr>
-    </tbody>
-</table>
+      </thead>
+      <tbody>
+        @forelse($items as $it)
+        <tr class="border-t">
+          <td class="px-4 py-2">{{ $it->id }}</td>
+          <td class="px-4 py-2">{{ optional($it->specialty)->name ?? '-' }}</td>
+          <td class="px-4 py-2">{{ $it->city }}/{{ $it->state }}</td>
+          <td class="px-4 py-2">{{ $it->status }}</td>
+          <td class="px-4 py-2 space-x-2">
+            <a href="{{ route('appointments.payment', $it) }}" class="text-blue-600 underline">Pagamento</a>
+          </td>
+        </tr>
+        @empty
+        <tr>
+          <td colspan="5" class="px-4 py-6 text-center text-gray-500">Você ainda não tem agendamentos.</td>
+        </tr>
+        @endforelse
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-4">
+    {{ $items->links() }}
+  </div>
+</div>
 @endsection

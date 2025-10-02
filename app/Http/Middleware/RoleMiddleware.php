@@ -3,22 +3,20 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, string $role)
+    public function handle($request, Closure $next, ...$roles)
     {
-        $user = $request->user();
-
+        $user = Auth::user();
         if (!$user) {
             return redirect()->route('login');
         }
-
-        if ($user->role !== $role) {
-            abort(403, 'Acesso negado.');
+        $have = $user->role ?? null;
+        if ($roles && !in_array($have, $roles, true)) {
+            abort(403, 'Acesso negado (role).');
         }
-
         return $next($request);
     }
 }

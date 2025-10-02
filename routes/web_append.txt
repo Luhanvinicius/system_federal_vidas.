@@ -1,0 +1,6 @@
+// Adicione/garanta estas rotas (com middleware nas ROTAS, não no controller)
+Route::middleware(['auth','verified','role:client'])->group(function () {
+    Route::get('/appointments/create', [\App\Http\Controllers\Client\AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointments', [\App\Http\Controllers\Client\AppointmentController::class, 'store'])->name('appointments.store');
+    Route::get('/appointments/{appointment}/payment', [\App\Http\Controllers\Client\AppointmentController::class, 'payment'])->name('appointments.payment');
+});
